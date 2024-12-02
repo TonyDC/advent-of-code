@@ -25,19 +25,10 @@ def part2():
     with open(file_path, 'r') as f:
         for line in f:
             levels = [int(level) for level in line.strip().split(' ')]
-            adjacent_levels = [(a, b) for a, b in zip(levels, levels[1:])]
-            deltas = [l2 - l1 for l1, l2 in adjacent_levels]
+            deltas = [l2 - l1 for l1, l2 in zip(levels, levels[1:])]
 
-            if is_valid(deltas):
+            if is_valid(deltas) or is_valid(deltas[1:]) or is_valid(deltas[:-1]) or any(is_valid(deltas[:n] + [sum(deltas[n:n + 2])] + deltas[n + 2:]) for n in range(len(deltas) - 1)):
                 safe += 1
-            else:
-                if is_valid(deltas[1:]) or is_valid(deltas[:-1]):
-                    safe += 1
-                else:
-                    for n in range(len(deltas) - 1):
-                        if is_valid(deltas[:n] + [sum(deltas[n:n + 2])] + deltas[n + 2:]):
-                            safe += 1
-                            break
 
     return safe
 
