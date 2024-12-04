@@ -79,8 +79,7 @@ class XmasStateMachine():
     def is_stuck(self):
         return self.state == -1
 
-
-def part1():
+def part_1_state_machine():
     res = 0
     states: List[XmasStateMachine] = []
 
@@ -101,28 +100,56 @@ def part1():
 
     return res
 
-def part2():
+def part_1():
     res = 0
+    combinations = ['XMAS', 'SAMX']
 
     with open(file_path, 'r') as f:
-        line_x_minus_2 = ''
-        line_x_minus_1 = ''
-        for l_nr, line in enumerate(f):
-            input = line.strip()
+        buffer = []
+        for line in f:
+            input_entry = line.strip()
 
-            if l_nr >= 2:
-                for y in range(len(line_x_minus_1) - 2):
-                    if line_x_minus_1[y + 1] == 'A' and (line_x_minus_2[y] == 'M' and line[y + 2] == 'S' or line_x_minus_2[y] == 'S' and line[y + 2] == 'M') and (line_x_minus_2[y + 2] == 'M' and line[y] == 'S' or line_x_minus_2[y + 2] == 'S' and line[y] == 'M'):
+            for y in range(len(input_entry) - 3):
+                if input_entry[y:y + 4] in combinations:
+                    res += 1
+
+            buffer.append(input_entry)
+
+            if len(buffer) == 4:
+                for y in range(len(input_entry)):
+                    if buffer[0][y] + buffer[1][y] + buffer[2][y] + buffer[3][y] in combinations:
                         res += 1
-            
-            line_x_minus_2 = line_x_minus_1
-            line_x_minus_1 = input
+                    if y < len(input_entry) - 3 and buffer[0][y] + buffer[1][y + 1] + buffer[2][y + 2] + buffer[3][y + 3] in combinations:
+                        res += 1
+                    if y >= 3 and buffer[0][y] + buffer[1][y - 1] + buffer[2][y - 2] + buffer[3][y - 3] in combinations:
+                        res += 1
+
+                buffer = buffer[1:]
+
+    return res
+
+def part_2():
+    res = 0
+    combinations = ['MAS', 'SAM']
+
+    with open(file_path, 'r') as f:
+        buffer = []
+        for line in f:
+            input_entry = line.strip()
+
+            buffer.append(input_entry)
+
+            if len(buffer) >= 3:
+                for y in range(len(input_entry) - 2):
+                    if buffer[0][y] + buffer[1][y + 1] + buffer[2][y + 2] in combinations and buffer[0][y + 2] + buffer[1][y + 1] + buffer[2][y] in combinations:
+                        res += 1
+                buffer = buffer[1:]
 
     return res
 
 
 def main():
-    return part1(), part2()
+    return part_1(), part_2()
 
 if __name__ == '__main__':
     print(main())
