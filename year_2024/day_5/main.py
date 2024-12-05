@@ -14,7 +14,7 @@ class ProcessingStep(Enum):
 
 def part_1():
     res = 0
-    violations = defaultdict(set)
+    violation_rules = defaultdict(set)
     processing_step = ProcessingStep.INGEST_ORDERING_RULES
 
     with open(file_path, 'r') as f:
@@ -25,16 +25,16 @@ def part_1():
                     processing_step = ProcessingStep.INGEST_PAGE_UPDATES
                 else:
                     left, right = tuple(map(int, line.split('|')))
-                    violations[right].add(left)
+                    violation_rules[right].add(left)
             elif processing_step == ProcessingStep.INGEST_PAGE_UPDATES:
                 sequence = list(map(int, line.split(',')))
-                states = [violations[s] for s in sequence]
+                violation_sets = [violation_rules[s] for s in sequence]
 
                 violation_found = False
 
                 for position in range(len(sequence)):
                     for sm_position in range(position):
-                        if sequence[position] in states[sm_position]:
+                        if sequence[position] in violation_sets[sm_position]:
                             violation_found = True
                             break
                     

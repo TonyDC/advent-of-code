@@ -109,6 +109,7 @@ def part_1():
         for line in f:
             input_entry = line.strip()
 
+            # Horizontal pattern
             for y in range(len(input_entry) - 3):
                 if input_entry[y:y + 4] in combinations:
                     res += 1
@@ -117,10 +118,13 @@ def part_1():
 
             if len(buffer) == 4:
                 for y in range(len(input_entry)):
+                    # Vertical pattern
                     if buffer[0][y] + buffer[1][y] + buffer[2][y] + buffer[3][y] in combinations:
                         res += 1
+                    # Diagonal (\)
                     if y < len(input_entry) - 3 and buffer[0][y] + buffer[1][y + 1] + buffer[2][y + 2] + buffer[3][y + 3] in combinations:
                         res += 1
+                    # Diagonal (/)
                     if y >= 3 and buffer[0][y] + buffer[1][y - 1] + buffer[2][y - 2] + buffer[3][y - 3] in combinations:
                         res += 1
 
@@ -141,6 +145,7 @@ def part_2():
 
             if len(buffer) >= 3:
                 for y in range(len(input_entry) - 2):
+                    # Cross (X)
                     if buffer[0][y] + buffer[1][y + 1] + buffer[2][y + 2] in combinations and buffer[0][y + 2] + buffer[1][y + 1] + buffer[2][y] in combinations:
                         res += 1
                 buffer = buffer[1:]
